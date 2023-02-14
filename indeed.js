@@ -1,7 +1,5 @@
 "use strict";
 
-const $ = jQuery;
-
 export class Indeed {
     
     constructor(publisher) {
@@ -16,18 +14,21 @@ export class Indeed {
 
     }
 
-    search(params, success){
+    search(params){
         this.validate_params(params);
 
         for(const attr in this.defaults){params[attr] = this.defaults[attr];}
+    
+        const url = new URL(this.endpoint, 'http://api.indeed.com');
+
+        for (const field in params) {
+            url.searchParams.set(field, params[field])
+        }
+
+        return fetch(url, {
+            method: 'GET',
+        })
         
-        $.ajax({
-            url: this.endpoint,
-            dataType: 'jsonp',
-            type: 'GET',
-            data: params,
-            success: success
-        });
     }
 
 
